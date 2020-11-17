@@ -22,6 +22,7 @@
 
 #include <elf.h>
 #include <cpu-features.h>
+#include <cet-control.h>
 
 struct La_i86_regs;
 struct La_i86_retval;

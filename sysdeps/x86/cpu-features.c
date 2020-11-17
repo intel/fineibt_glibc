@@ -564,7 +564,7 @@ no_cpuid:
 
   if (cet_status)
     {
-      GL(dl_x86_feature_1)[0] = cet_status;
+      GL(dl_x86_feature_1) = cet_status;
 
 # ifndef SHARED
       /* Check if IBT and SHSTK are enabled by kernel.  */
@@ -588,16 +588,15 @@ no_cpuid:
 
 	      /* Clear the disabled bits in dl_x86_feature_1.  */
 	      if (res == 0)
-		GL(dl_x86_feature_1)[0] &= ~cet_feature;
+		GL(dl_x86_feature_1) &= ~cet_feature;
 	    }
 
 	  /* Lock CET if IBT or SHSTK is enabled in executable.  Don't
 	     lock CET if SHSTK is enabled permissively.  */
-	  if (((GL(dl_x86_feature_1)[1] >> CET_MAX)
-	       & ((1 << CET_MAX) - 1))
-	       != CET_PERMISSIVE)
-	    dl_cet_lock_cet ();
-	}
+    if (GL(dl_x86_feature_control).ibt != cet_permissive
+        && GL(dl_x86_feature_control).shstk != cet_permissive)
+        dl_cet_lock_cet ();
+  }
 # endif
     }
 #endif

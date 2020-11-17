@@ -1,5 +1,5 @@
 /* Data for processor runtime information.  x86 version.
-   Copyright (C) 2018-2019 Free Software Foundation, Inc.
+   Copyright (C) 2018-2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* This information must be kept in sync with the _DL_HWCAP_COUNT,
    HWCAP_PLATFORMS_START and HWCAP_PLATFORMS_COUNT definitions in
@@ -47,7 +47,10 @@
 # if !defined PROCINFO_DECL && defined SHARED
   ._dl_x86_feature_1
 # else
-PROCINFO_CLASS unsigned int _dl_x86_feature_1[2]
+PROCINFO_CLASS unsigned int _dl_x86_feature_1
+# endif
+# ifndef PROCINFO_DECL
+= 0
 # endif
 # if !defined SHARED || defined PROCINFO_DECL
 ;
@@ -56,9 +59,15 @@ PROCINFO_CLASS unsigned int _dl_x86_feature_1[2]
 # endif
 
 # if !defined PROCINFO_DECL && defined SHARED
-  ._dl_x86_legacy_bitmap
+  ._dl_x86_feature_control
 # else
-PROCINFO_CLASS unsigned long _dl_x86_legacy_bitmap[2]
+PROCINFO_CLASS struct dl_x86_feature_control _dl_x86_feature_control
+# endif
+# ifndef PROCINFO_DECL
+= {
+    .ibt = DEFAULT_DL_X86_CET_CONTROL,
+    .shstk = DEFAULT_DL_X86_CET_CONTROL,
+  }
 # endif
 # if !defined SHARED || defined PROCINFO_DECL
 ;
