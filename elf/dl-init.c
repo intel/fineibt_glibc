@@ -18,6 +18,7 @@
 
 #include <stddef.h>
 #include <ldsodefs.h>
+#include <cetdefs.h>
 
 
 /* Type of the initializer.  */
@@ -74,7 +75,7 @@ call_init (struct link_map *l, int argc, char **argv, char **env)
 }
 
 
-void
+void _COARSECF_CHECK
 _dl_init (struct link_map *main_map, int argc, char **argv, char **env)
 {
   ElfW(Dyn) *preinit_array = main_map->l_info[DT_PREINIT_ARRAY];

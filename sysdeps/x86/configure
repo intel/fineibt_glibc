@@ -67,4 +67,6 @@ elif test $enable_cet = permissive; then
 
 fi
 config_vars="$config_vars
-enable-cet = $enable_cet"
+enable-cet = $enable_cet
+enable-fineibt = $enable_fineibt
+enable-fixedr11 = $enable_fixedr11"

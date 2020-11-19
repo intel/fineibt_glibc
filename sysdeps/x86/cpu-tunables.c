@@ -352,6 +352,19 @@ TUNABLE_CALLBACK (set_x86_ibt) (tunable_val_t *valp)
 
 attribute_hidden
 void
+TUNABLE_CALLBACK (set_x86_fineibt) (tunable_val_t *valp)
+{
+  if (DEFAULT_MEMCMP (valp->strval, "on", sizeof ("on")) == 0)
+    GL(dl_x86_feature_control).fineibt = cet_always_on;
+  else if (DEFAULT_MEMCMP (valp->strval, "off", sizeof ("off")) == 0)
+    GL(dl_x86_feature_control).fineibt = cet_always_off;
+  else if (DEFAULT_MEMCMP (valp->strval, "permissive",
+			   sizeof ("permissive")) == 0)
+    GL(dl_x86_feature_control).fineibt = cet_permissive;
+}
+
+attribute_hidden
+void
 TUNABLE_CALLBACK (set_x86_shstk) (tunable_val_t *valp)
 {
   if (DEFAULT_MEMCMP (valp->strval, "on", sizeof ("on")) == 0)

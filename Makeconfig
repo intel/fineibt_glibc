@@ -400,6 +400,10 @@ ifeq ($(bind-now),yes)
 LDFLAGS-lib.so += -Wl,-z,now
 endif
 
+ifeq ($(with-clang),yes)
+LDFLAGS += -Wl,-z,now
+endif
+
 # Command to run after every final link (executable or shared object).
 # This is invoked with $(call after-link,...), so it should operate on
 # the file $1.  This can be set to do some sort of post-processing on
@@ -643,6 +647,16 @@ ifneq ($(have-cc-with-libunwind),yes)
 else
   libunwind = -lunwind
 endif
+ifeq (yes,$(with-clang))
+libgcc_eh := --rtlib=compiler-rt
+gnulib=arch =
+gnulib = --rtlib=compiler-rt
+gnulib-rests = --rtlib=compiler-rt
+static-gnulib-argh =
+static-gnulib = --rtlib=compiler-rt
+static-gnulib-rests := --rtlib=compiler-rt
+libc.so-gnutlib := --rtlib=compiler-rt
+else
 libgcc_eh := -Wl,--as-needed -lgcc_s $(libunwind) -Wl,--no-as-needed
 gnulib-arch =
 gnulib = -lgcc $(gnulib-arch)
@@ -659,8 +673,20 @@ endif
 static-gnulib-tests := -lgcc -lgcc_eh $(libunwind)
 libc.so-gnulib := -lgcc
 endif
+endif
 +preinit = $(addprefix $(csu-objpfx),crti.o)
 +postinit = $(addprefix $(csu-objpfx),crtn.o)
+ifeq (yes,$(with-clang))
++prector =
++postctor =
+# Variants of the two previous definitions for linking PIE programs.
++prectorS =
++postctorS =
+# Variants of the two previous definitions for statically linking programs.
+# Static PIE must use PIE variants.
++prectorT =
++postctorT =
+else
 +prector = `$(CC) $(sysdep-LDFLAGS) --print-file-name=crtbegin.o`
 +postctor = `$(CC) $(sysdep-LDFLAGS) --print-file-name=crtend.o`
 # Variants of the two previous definitions for linking PIE programs.
@@ -674,6 +700,7 @@ ifeq (yes,$(enable-static-pie))
 else
 +prectorT = `$(CC) $(sysdep-LDFLAGS) --print-file-name=crtbeginT.o`
 +postctorT = `$(CC) $(sysdep-LDFLAGS) --print-file-name=crtend.o`
+endif
 endif
 csu-objpfx = $(common-objpfx)csu/
 elf-objpfx = $(common-objpfx)elf/

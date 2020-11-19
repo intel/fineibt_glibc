@@ -29,7 +29,9 @@ enum cf_protection_level
   CF_BRANCH = 1 << 0,
   CF_RETURN = 1 << 1,
   CF_FULL = CF_BRANCH | CF_RETURN,
-  CF_SET = 1 << 2
+  CF_SET = 1 << 2 (or LAM?)
+  LAM = 1 << 3
+  CF_FINEIBT = 1 << 4
 };
 */
 
@@ -37,15 +39,19 @@ enum cf_protection_level
 #define X86_FEATURE_1_IBT	(1U << 0)
 /* Set if CF_RETURN (SHSTK) is enabled.  */
 #define X86_FEATURE_1_SHSTK	(1U << 1)
+/* Set if FINE CF_BRANCH (FineIBT) is enabled.  */
+#define X86_FEATURE_1_FINEIBT   (1U << 4)
 
 #ifdef __CET__
-# define CET_ENABLED	1
-# define IBT_ENABLED	(__CET__ & X86_FEATURE_1_IBT)
-# define SHSTK_ENABLED	(__CET__ & X86_FEATURE_1_SHSTK)
+# define CET_ENABLED	  1
+# define IBT_ENABLED	  (__CET__ & X86_FEATURE_1_IBT)
+# define SHSTK_ENABLED	  (__CET__ & X86_FEATURE_1_SHSTK)
+# define FINEIBT_ENABLED  (IBT_ENABLED && (__CET__ & X86_FEATURE_1_FINEIBT))
 #else
-# define CET_ENABLED	0
-# define IBT_ENABLED	0
-# define SHSTK_ENABLED	0
+# define CET_ENABLED	  0
+# define IBT_ENABLED	  0
+# define SHSTK_ENABLED	  0
+# define FINEIBT_ENABLED  0
 #endif
 
 /* Offset for fxsave/xsave area used by _dl_runtime_resolve.  Also need
@@ -63,9 +69,11 @@ enum cf_protection_level
 
 #ifdef _CET_ENDBR
 # define _CET_NOTRACK notrack
+# define _COARSECF_CHECK __attribute__((coarsecf_check))
 #else
 # define _CET_ENDBR
 # define _CET_NOTRACK
+# define _COARSECF_CHECK
 #endif
 
 /* ELF uses byte-counts for .align, most others use log2 of count of bytes.  */

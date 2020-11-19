@@ -1343,6 +1343,10 @@ typedef struct
    SHSTK.  */
 #define GNU_PROPERTY_X86_FEATURE_1_SHSTK	(1U << 1)
 
+/* This indicates that all executable sections are compatible with
+   FineIBT.  */
+#define GNU_PROPERTY_X86_FEATURE_1_FINEIBT      (1U << 4)
+
 /* Move records.  */
 typedef struct
 {

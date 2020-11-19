@@ -455,12 +455,21 @@ else
 dummy-stack-chk-fail :=
 endif
 
+ifneq ($(with-clang),yes)
+$(objpfx)librtld.map: $(objpfx)dl-allobjs.os $(common-objpfx)libc_pic.a
+	@-rm -f $@T
+	$(reloc-link) -o $@.o $(dummy-stack-chk-fail) \
+		'-Wl,-(' $^ --rtlib=compiler-rt '-Wl,-)' -Wl,-Map,$@T
+	rm -f $@.o
+	mv -f $@T $@
+else
 $(objpfx)librtld.map: $(objpfx)dl-allobjs.os $(common-objpfx)libc_pic.a
 	@-rm -f $@T
 	$(reloc-link) -o $@.o $(dummy-stack-chk-fail) \
 		'-Wl,-(' $^ -lgcc '-Wl,-)' -Wl,-Map,$@T
 	rm -f $@.o
 	mv -f $@T $@
+endif
 
 # For lld, add to regexp below for optional address and size to be at front of line.
 $(objpfx)librtld.mk: $(objpfx)librtld.map Makefile
@@ -487,9 +496,16 @@ $(objpfx)librtld.mk: $(objpfx)librtld.map Makefile
 $(objpfx)rtld-libc.a: $(objpfx)librtld.mk FORCE
 	$(MAKE) -f $< -f rtld-Rules
 
+
+ifneq ($(with-clang),yes)
+$(objpfx)librtld.os: $(objpfx)dl-allobjs.os $(objpfx)rtld-libc.a
+	$(LINK.o) -nostdlib -nostartfiles -r -o $@ '-Wl,-(' $^ --rtlib=compiler-rt '-Wl,-)' \
+		  -Wl,-Map,$@.map
+else
 $(objpfx)librtld.os: $(objpfx)dl-allobjs.os $(objpfx)rtld-libc.a
 	$(LINK.o) -nostdlib -nostartfiles -r -o $@ '-Wl,-(' $^ -lgcc '-Wl,-)' \
 		  -Wl,-Map,$@.map
+endif
 
 generated += librtld.map librtld.mk rtld-libc.a librtld.os.map
 

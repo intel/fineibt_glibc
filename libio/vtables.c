@@ -20,6 +20,7 @@
 #include <libioP.h>
 #include <stdio.h>
 #include <ldsodefs.h>
+#include <cetdefs.h>
 
 #ifdef SHARED
 
@@ -77,7 +78,7 @@ _IO_vtable_check (void)
    other functions.  Detect this by looking at the vtables values
    during startup, and disable vtable validation in this case.  */
 #ifdef SHARED
-__attribute__ ((constructor))
+__attribute__ ((constructor)) _COARSECF_CHECK
 static void
 check_stdfiles_vtables (void)
 {

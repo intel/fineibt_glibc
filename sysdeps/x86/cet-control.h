@@ -36,6 +36,7 @@ struct dl_x86_feature_control
 {
   enum dl_x86_cet_control ibt : 2;
   enum dl_x86_cet_control shstk : 2;
+  enum dl_x86_cet_control fineibt :2;
 };
 
 #endif /* cet-control.h */

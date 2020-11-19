@@ -541,6 +541,17 @@ lib%.so: lib%_pic.a $(+preinit) $(+postinit) $(link-libc-deps)
 	$(build-shlib) $(link-libc-args)
 	$(call after-link,$@)
 
+ifeq ($(with-clang),yes)
+define build-shlib-helper
+$(LINK.o) -shared --rtlib=compiler-rt -Wl,-O1 $(sysdep-LDFLAGS) \
+	  $(if $($(@F)-no-z-defs)$(no-z-defs),,-Wl,-z,defs) $(rtld-LDFLAGS) \
+	  $(extra-B-$(@F:lib%.so=%).so) -B$(csu-objpfx) \
+	  $(extra-B-$(@F:lib%.so=%).so) $(load-map-file) \
+	  -Wl,-soname=lib$(libprefix)$(@F:lib%.so=%).so$($(@F)-version) \
+	  $(LDFLAGS.so) $(LDFLAGS-lib.so) $(LDFLAGS-$(@F:lib%.so=%).so) \
+	  -L$(subst :, -L,$(rpath-link)) -Wl,-rpath-link=$(rpath-link)
+endef
+else
 define build-shlib-helper
 $(LINK.o) -shared -static-libgcc -Wl,-O1 $(sysdep-LDFLAGS) \
 	  $(if $($(@F)-no-z-defs)$(no-z-defs),,-Wl,-z,defs) $(rtld-LDFLAGS) \
@@ -550,6 +561,7 @@ $(LINK.o) -shared -static-libgcc -Wl,-O1 $(sysdep-LDFLAGS) \
 	  $(LDFLAGS.so) $(LDFLAGS-lib.so) $(LDFLAGS-$(@F:lib%.so=%).so) \
 	  -L$(subst :, -L,$(rpath-link)) -Wl,-rpath-link=$(rpath-link)
 endef
+endif
 
 ifeq (yes,$(use-default-link))
 # If the linker is good enough, we can let it use its default linker script.
@@ -600,6 +612,15 @@ $(build-shlib-helper) -o $@ $(shlib-lds-flags) \
 	  $(csu-objpfx)abi-note.o $(build-shlib-objlist)
 endef
 
+ifeq ($(with-clang),yes)
+define build-module-helper
+$(LINK.o) -shared --rtlib=compiler-rt $(sysdep-LDFLAGS) $(rtld-LDFLAGS) \
+	  $(if $($(@F)-no-z-defs)$(no-z-defs),,-Wl,-z,defs) \
+	  -B$(csu-objpfx) $(load-map-file) \
+	  $(LDFLAGS.so) $(LDFLAGS-$(@F:%.so=%).so) \
+	  -L$(subst :, -L,$(rpath-link)) -Wl,-rpath-link=$(rpath-link)
+endef
+else
 define build-module-helper
 $(LINK.o) -shared -static-libgcc $(sysdep-LDFLAGS) $(rtld-LDFLAGS) \
 	  $(if $($(@F)-no-z-defs)$(no-z-defs),,-Wl,-z,defs) \
@@ -607,6 +628,7 @@ $(LINK.o) -shared -static-libgcc $(sysdep-LDFLAGS) $(rtld-LDFLAGS) \
 	  $(LDFLAGS.so) $(LDFLAGS-$(@F:%.so=%).so) \
 	  -L$(subst :, -L,$(rpath-link)) -Wl,-rpath-link=$(rpath-link)
 endef
+endif
 
 # This macro is similar to build-shlib but it does not define a soname
 # and it does not depend on the destination name to start with `lib'.

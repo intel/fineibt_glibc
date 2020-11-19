@@ -31,6 +31,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <sched.h>
+#include <cetdefs.h>
 
 #ifdef _IO_MTSAFE_IO
 static _IO_lock_t list_all_lock = _IO_lock_initializer;
@@ -850,7 +851,7 @@ libc_freeres_fn (buffer_free)
 }
 
 
-int
+_COARSECF_CHECK int
 _IO_cleanup (void)
 {
   /* We do *not* want locking.  Some threads might use streams but

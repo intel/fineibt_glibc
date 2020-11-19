@@ -143,6 +143,8 @@ _dl_process_cet_property_note (struct link_map *l,
     l->l_cet |= lc_ibt;
   if ((feature_1 & GNU_PROPERTY_X86_FEATURE_1_SHSTK))
     l->l_cet |= lc_shstk;
+  if ((feature_1 & GNU_PROPERTY_X86_FEATURE_1_FINEIBT))
+    l->l_cet |= lc_fineibt;
 #endif
 }
 

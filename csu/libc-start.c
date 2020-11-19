@@ -22,6 +22,7 @@
 #include <ldsodefs.h>
 #include <exit-thread.h>
 #include <libc-internal.h>
+#include <cetdefs.h>
 
 #include <elf/dl-tunables.h>
 
@@ -108,7 +109,7 @@ apply_irel (void)
 
 #include <libc-start.h>
 
-STATIC int LIBC_START_MAIN (int (*main) (int, char **, char **
+STATIC _COARSECF_CHECK int LIBC_START_MAIN (int (*main) (int, char **, char **
 					 MAIN_AUXVEC_DECL),
 			    int argc,
 			    char **argv,
@@ -125,7 +126,7 @@ STATIC int LIBC_START_MAIN (int (*main) (int, char **, char **
 /* Note: the fini parameter is ignored here for shared library.  It
    is registered with __cxa_atexit.  This had the disadvantage that
    finalizers were called in more than one place.  */
-STATIC int
+STATIC _COARSECF_CHECK int
 LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
 		 int argc, char **argv,
 #ifdef LIBC_START_MAIN_AUXVEC_ARG

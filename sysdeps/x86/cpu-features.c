@@ -32,6 +32,8 @@ extern void TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *)
 # if CET_ENABLED
 extern void TUNABLE_CALLBACK (set_x86_ibt) (tunable_val_t *)
   attribute_hidden;
+extern void TUNABLE_CALLBACK (set_x86_fineibt) (tunable_val_t *)
+  attribute_hidden;
 extern void TUNABLE_CALLBACK (set_x86_shstk) (tunable_val_t *)
   attribute_hidden;
 # endif
@@ -555,6 +557,8 @@ no_cpuid:
 # if HAVE_TUNABLES
   TUNABLE_GET (x86_ibt, tunable_val_t *,
 	       TUNABLE_CALLBACK (set_x86_ibt));
+  TUNABLE_GET (x86_fineibt, tunable_val_t *,
+	       TUNABLE_CALLBACK (set_x86_fineibt));
   TUNABLE_GET (x86_shstk, tunable_val_t *,
 	       TUNABLE_CALLBACK (set_x86_shstk));
 # endif
@@ -567,7 +571,8 @@ no_cpuid:
       GL(dl_x86_feature_1) = cet_status;
 
 # ifndef SHARED
-      /* Check if IBT and SHSTK are enabled by kernel.  */
+      /* Check if IBT and SHSTK are enabled by kernel.
+         No need to handle FineIBT here.  */
       if ((cet_status & GNU_PROPERTY_X86_FEATURE_1_IBT)
 	  || (cet_status & GNU_PROPERTY_X86_FEATURE_1_SHSTK))
 	{

@@ -19,13 +19,13 @@
 #include <assert.h>
 #include <string.h>
 #include <ldsodefs.h>
-
+#include <cetdefs.h>
 
 /* Type of the constructor functions.  */
 typedef void (*fini_t) (void);
 
 
-void
+_COARSECF_CHECK void
 _dl_fini (void)
 {
   /* Lots of fun ahead.  We have to call the destructors for all still

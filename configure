@@ -799,6 +799,8 @@ enable_tunables
 enable_float128
 enable_mathvec
 enable_cet
+enable_fineibt
+enable_fixedr11
 with_cpu
 '
       ac_precious_vars='build_alias
@@ -1486,8 +1488,11 @@ Optional Features:
   --disable-float128      disable float128 support
   --enable-mathvec        Enable building and installing mathvec [default
                           depends on architecture]
-  --enable-cet            enable Intel Control-flow Enforcement Technology
+  --enable-cet            Enable Intel Control-flow Enforcement Technology
                           (CET), x86 only
+  --enable-fineibt        Enable Fine-grained Indirect Branch Tracking
+                          (FineIBT), x86 only
+  --enable-fixedr11       Reserve R11 during register allocation, x86 only
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -3828,6 +3833,12 @@ else
   build_mathvec=notset
 fi
 
+# Check whether --enable-fixedr11 was given.
+if test "${enable_fixedr11+set}" = set; then :
+  enableval=$enable_fixedr11; enable_fixedr11=$enableval
+else
+  enable_fixedr11=no
+fi
 
 # Check whether --enable-cet was given.
 if test "${enable_cet+set}" = set; then :
@@ -3836,6 +3847,12 @@ else
   enable_cet=no
 fi
 
+# If cet is enabled, check if fineibt is enabled
+if test "$enable_cet" = yes && test "${enable_fineibt+set}" = set; then :
+  enableval=$enable_fineibt; enable_fineibt=$enableval
+else
+  enable_fineibt=no
+fi
 
 # We keep the original values in `$config_*' and never modify them, so we
 # can write them unchanged into config.make.  Everything else uses

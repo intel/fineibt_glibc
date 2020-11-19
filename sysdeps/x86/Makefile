@@ -14,6 +14,14 @@ gen-as-const-headers += jmp_buf-ssp.sym
 sysdep_routines += __longjmp_cancel
 endif
 
+ifeq ($(enable-fixedr11),yes)
+CFLAGS-.o += -ffixed-r11
+CFLAGS-.os += -ffixed-r11
+CFLAGS-.op += -ffixed-r11
+CFLAGS-.oS += -ffixed-r11
+asm-CPPFLAGS += -ffixed-r11
+endif
+
 ifeq ($(enable-cet),yes)
 ifeq ($(subdir),elf)
 sysdep-dl-routines += dl-cet
@@ -61,13 +69,22 @@ endif
 endif
 
 # Add -fcf-protection to CFLAGS when CET is enabled.
+ifeq ($(enable-fineibt),yes)
+CFLAGS-.o += -fcf-protection=fine
+CFLAGS-.os += -fcf-protection=fine
+CFLAGS-.op += -fcf-protection=fine
+CFLAGS-.oS += -fcf-protection=fine
+asm-CPPFLAGS += -fcf-protection=fine
+else
 CFLAGS-.o += -fcf-protection
 CFLAGS-.os += -fcf-protection
 CFLAGS-.op += -fcf-protection
 CFLAGS-.oS += -fcf-protection
+asm-CPPFLAGS += -fcf-protection
+endif
 
 # Compile assembly codes with <cet.h> when CET is enabled.
-asm-CPPFLAGS += -fcf-protection -include cet.h
+asm-CPPFLAGS += -include cet.h
 
 ifeq ($(subdir),elf)
 ifeq (yes,$(build-shared))

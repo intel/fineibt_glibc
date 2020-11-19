@@ -24,6 +24,7 @@
 #include <unistd.h>
 #include <cpuid.h>
 #include <init-arch.h>
+#include <cetdefs.h>
 
 static const struct intel_02_cache_info
 {
@@ -484,6 +485,7 @@ int __x86_prefetchw attribute_hidden;
 
 static void
 __attribute__((constructor))
+_COARSECF_CHECK
 init_cacheinfo (void)
 {
   /* Find out what brand of processor.  */

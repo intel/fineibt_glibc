@@ -24,6 +24,9 @@ glibc {
     x86_ibt {
       type: STRING
     }
+    x86_fineibt {
+      type: STRING
+    }
     x86_shstk {
       type: STRING
     }

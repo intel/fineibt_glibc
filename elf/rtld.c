@@ -43,6 +43,7 @@
 #include <stap-probe.h>
 #include <stackinfo.h>
 #include <not-cancel.h>
+#include <cetdefs.h>
 
 #include <assert.h>
 
@@ -295,6 +296,7 @@ extern struct rtld_global_ro _rtld_local_ro
     __attribute__ ((alias ("_rtld_global_ro"), visibility ("hidden")));
 
 
+_COARSECF_CHECK
 static void dl_main (const ElfW(Phdr) *phdr, ElfW(Word) phnum,
 		     ElfW(Addr) *user_entry, ElfW(auxv_t) *auxv);
 
@@ -462,7 +464,7 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
 #include "dynamic-link.h"
 #endif /* n NESTING */
 
-static ElfW(Addr) __attribute_used__
+static ElfW(Addr) __attribute_used__ _COARSECF_CHECK
 _dl_start (void *arg)
 {
 #ifndef NESTING
@@ -895,6 +897,7 @@ handle_ld_preload (const char *preloadlist, struct link_map *main_map)
   return npreloads;
 }
 
+_COARSECF_CHECK
 static void
 dl_main (const ElfW(Phdr) *phdr,
 	 ElfW(Word) phnum,

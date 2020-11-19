@@ -43,6 +43,7 @@
 #include <shlib-compat.h>
 #include <not-cancel.h>
 #include <kernel-features.h>
+#include <cetdefs.h>
 
 extern struct __gconv_trans_data __libio_translit attribute_hidden;
 
@@ -102,7 +103,7 @@ extern struct __gconv_trans_data __libio_translit attribute_hidden;
   (_IO_IS_FILEBUF+_IO_NO_READS+_IO_NO_WRITES+_IO_TIED_PUT_GET)
 
 
-void
+void _COARSECF_CHECK
 _IO_new_file_init_internal (struct _IO_FILE_plus *fp)
 {
   /* POSIX.1 allows another file handle to be used to change the position

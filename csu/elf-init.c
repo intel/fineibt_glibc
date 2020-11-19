@@ -34,7 +34,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <stddef.h>
-
+#include <cetdefs.h>
 
 /* These magic symbols are provided by the linker.  */
 extern void (*__preinit_array_start []) (int, char **, char **)
@@ -63,7 +63,7 @@ extern void _fini (void);
    the libc.a module in that it doesn't call the preinit array.  */
 
 
-void
+void _COARSECF_CHECK
 __libc_csu_init (int argc, char **argv, char **envp)
 {
   /* For dynamically linked executables the preinit array is executed by
@@ -91,7 +91,7 @@ __libc_csu_init (int argc, char **argv, char **envp)
 /* This function should not be used anymore.  We run the executable's
    destructor now just like any other.  We cannot remove the function,
    though.  */
-void
+void _COARSECF_CHECK
 __libc_csu_fini (void)
 {
 #ifndef LIBC_NONSHARED
