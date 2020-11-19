@@ -172,10 +172,17 @@ elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
 	 them. Therefore to avoid breaking existing applications the
 	 best we can do is add a warning during debugging with the
 	 intent of notifying the user of the problem.  */
-      if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FILES, 0)
+
+      /* For some yet unknown reason, this check it causing crashes on
+         bind-now glibc. This is fixed in the master branch of glibc,
+         but not backported into the grte branch from which this branch
+         was forked. This may need a better fix. Yet, as it is only a
+         warning, comment it for now and prevent the crash.  */
+
+     /*if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FILES, 0)
 	  && l->l_flags_1 & ~DT_1_SUPPORTED_MASK)
 	_dl_debug_printf ("\nWARNING: Unsupported flag value(s) of 0x%x in DT_FLAGS_1.\n",
-			  l->l_flags_1 & ~DT_1_SUPPORTED_MASK);
+			  l->l_flags_1 & ~DT_1_SUPPORTED_MASK);*/
 
       if (l->l_flags_1 & DF_1_NOW)
 	info[DT_BIND_NOW] = info[VERSYMIDX (DT_FLAGS_1)];
