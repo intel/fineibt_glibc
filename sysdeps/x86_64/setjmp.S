@@ -81,7 +81,7 @@ L(skip_ssp):
 	retq
 #else
 	/* Make a tail call to __sigjmp_save; it takes the same args.  */
-#if defined __CET__ && __CET__ & 0x8
+#if defined __CET__ && __CET__ & 0x10
 	jmp __sigjmp_save + 32
 #else
 	jmp __sigjmp_save
