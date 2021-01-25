@@ -57,6 +57,5 @@ time (time_t *t)
   return INTERNAL_SYSCALL (time, err, 1, t);
 }
 
-#endif
-
 libc_hidden_weak (time)
+#endif
