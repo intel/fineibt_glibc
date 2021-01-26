@@ -3238,7 +3238,7 @@ main ()
   return 0;
 }
 _ACEOF
-if ac_fn_cxx_try_link "$LINENO"; then :
+if ac_fn_cxx_try_link "$LINENO" && test "$with_clang" = no; then : 
   libc_cv_cxx_link_ok=yes
 else
   libc_cv_cxx_link_ok=no
@@ -3261,7 +3261,7 @@ main()
 }
 
 _ACEOF
-if ac_fn_cxx_try_link "$LINENO"; then :
+if ac_fn_cxx_try_link "$LINENO" && test "$with_clang" = no; then : 
 
 else
   libc_cv_cxx_link_ok=no
